@@ -1221,87 +1221,98 @@ task.spawn(function()
 	Splash.DisplayOrder = 32767
 	Splash.IgnoreGuiInset = true
 
-	local Backdrop = Instance.new("Frame", Splash)
-	Backdrop.Size = UDim2.new(1, 0, 1, 0)
-	Backdrop.BackgroundColor3 = Color3.fromRGB(6, 7, 10)
-
-	local Accent = Library.Scheme.AccentColor or Color3.fromRGB(255, 214, 90)
-
-	local Shadow = Instance.new("TextLabel", Backdrop)
-	Shadow.Font = Enum.Font.Bodoni
-	Shadow.Text = "TIMI"
-	Shadow.TextScaled = true
-	Shadow.Size = UDim2.new(0, 720, 0, 150)
-	Shadow.Position = UDim2.new(0.5, -344, 0.5, -69)
-	Shadow.BackgroundTransparency = 1
-	Shadow.TextColor3 = Color3.new(0, 0, 0)
-	Shadow.TextTransparency = 0.6
-	Shadow.ZIndex = 1
-
-	local Title = Instance.new("TextLabel", Backdrop)
-	Title.Font = Enum.Font.Bodoni
-	Title.Text = "TIMI"
-	Title.TextScaled = true
-	Title.Size = UDim2.new(0, 720, 0, 150)
-	Title.Position = UDim2.new(0.5, -360, 0.5, -75)
-	Title.BackgroundTransparency = 1
-	Title.TextTransparency = 1
-	Title.TextStrokeTransparency = 1
-	Title.ZIndex = 2
-
-	local Stroke = Instance.new("UIStroke", Title)
-	Stroke.Thickness = 2.5
-	Stroke.Transparency = 1
-	Stroke.Color = Accent
-
-	local Line = Instance.new("Frame", Backdrop)
-	Line.AnchorPoint = Vector2.new(0.5, 0)
-	Line.Position = UDim2.new(0.5, 0, 0.62, 0)
-	Line.Size = UDim2.new(0, 0, 0, 3)
-	Line.BackgroundColor3 = Accent
-	Line.BackgroundTransparency = 1
-	Line.BorderSizePixel = 0
-	Instance.new("UICorner", Line).CornerRadius = UDim.new(1, 0)
-
-	local Subtitle = Instance.new("TextLabel", Backdrop)
-	Subtitle.Font = Enum.Font.GothamMedium
-	Subtitle.Text = "welcome to the abyss"
-	Subtitle.TextSize = 16
-	Subtitle.TextLetterSpacing = 4
-	Subtitle.Size = UDim2.new(0, 400, 0, 24)
-	Subtitle.Position = UDim2.new(0.5, -200, 0.66, 12)
-	Subtitle.BackgroundTransparency = 1
-	Subtitle.TextColor3 = Color3.fromRGB(190, 195, 210)
-	Subtitle.TextTransparency = 1
-	Subtitle.ZIndex = 2
-
 	task.spawn(function()
-		local Start = tick()
-		while Splash and Splash.Parent do
-			local T = tick() - Start
-			local Rotation = math.sin(T * math.pi) * 15
-			Title.Rotation = Rotation
-			Shadow.Rotation = Rotation
-			RunService.Heartbeat:Wait()
-		end
+		task.wait(12)
+		if Splash and Splash.Parent then Splash:Destroy() end
 	end)
 
-	Services.TweenService:Create(Title, TweenInfo.new(2.4, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), { TextTransparency = 0 }):Play()
-	Services.TweenService:Create(Title, TweenInfo.new(2.4, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), { TextStrokeTransparency = 0 }):Play()
-	Services.TweenService:Create(Stroke, TweenInfo.new(2.4, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), { Transparency = 0 }):Play()
-	Services.TweenService:Create(Line, TweenInfo.new(1.6, Enum.EasingStyle.Cubic, Enum.EasingDirection.Out), { Size = UDim2.new(0, 300, 0, 3), BackgroundTransparency = 0 }):Play()
-	Services.TweenService:Create(Subtitle, TweenInfo.new(2.0, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), { TextTransparency = 0 }):Play()
+	local Ok = pcall(function()
+		local Backdrop = Instance.new("Frame", Splash)
+		Backdrop.Size = UDim2.new(1, 0, 1, 0)
+		Backdrop.BackgroundColor3 = Color3.fromRGB(6, 7, 10)
 
-	task.wait(4.4)
+		local Accent = Library.Scheme.AccentColor or Color3.fromRGB(255, 214, 90)
 
-	Services.TweenService:Create(Title, TweenInfo.new(1.8, Enum.EasingStyle.Quart, Enum.EasingDirection.In), { TextTransparency = 1, TextStrokeTransparency = 1 }):Play()
-	Services.TweenService:Create(Stroke, TweenInfo.new(1.8, Enum.EasingStyle.Quart, Enum.EasingDirection.In), { Transparency = 1 }):Play()
-	Services.TweenService:Create(Line, TweenInfo.new(1.8, Enum.EasingStyle.Quart, Enum.EasingDirection.In), { BackgroundTransparency = 1 }):Play()
-	Services.TweenService:Create(Subtitle, TweenInfo.new(1.6, Enum.EasingStyle.Quart, Enum.EasingDirection.In), { TextTransparency = 1 }):Play()
-	Services.TweenService:Create(Backdrop, TweenInfo.new(1.8, Enum.EasingStyle.Quart, Enum.EasingDirection.In), { BackgroundTransparency = 1 }):Play()
+		local Shadow = Instance.new("TextLabel", Backdrop)
+		Shadow.Font = Enum.Font.Bodoni
+		Shadow.Text = "TIMI"
+		Shadow.TextScaled = true
+		Shadow.Size = UDim2.new(0, 720, 0, 150)
+		Shadow.Position = UDim2.new(0.5, -344, 0.5, -69)
+		Shadow.BackgroundTransparency = 1
+		Shadow.TextColor3 = Color3.new(0, 0, 0)
+		Shadow.TextTransparency = 0.6
+		Shadow.ZIndex = 1
 
-	task.wait(1.8)
-	Splash:Destroy()
+		local Title = Instance.new("TextLabel", Backdrop)
+		Title.Font = Enum.Font.Bodoni
+		Title.Text = "TIMI"
+		Title.TextScaled = true
+		Title.Size = UDim2.new(0, 720, 0, 150)
+		Title.Position = UDim2.new(0.5, -360, 0.5, -75)
+		Title.BackgroundTransparency = 1
+		Title.TextTransparency = 1
+		Title.TextStrokeTransparency = 1
+		Title.ZIndex = 2
+
+		local Stroke = Instance.new("UIStroke", Title)
+		Stroke.Thickness = 2.5
+		Stroke.Transparency = 1
+		Stroke.Color = Accent
+
+		local Line = Instance.new("Frame", Backdrop)
+		Line.AnchorPoint = Vector2.new(0.5, 0)
+		Line.Position = UDim2.new(0.5, 0, 0.62, 0)
+		Line.Size = UDim2.new(0, 0, 0, 3)
+		Line.BackgroundColor3 = Accent
+		Line.BackgroundTransparency = 1
+		Line.BorderSizePixel = 0
+		Instance.new("UICorner", Line).CornerRadius = UDim.new(1, 0)
+
+		local Subtitle = Instance.new("TextLabel", Backdrop)
+		Subtitle.Font = Enum.Font.GothamMedium
+		Subtitle.Text = "welcome to the abyss"
+		Subtitle.TextSize = 16
+		Subtitle.TextLetterSpacing = 4
+		Subtitle.Size = UDim2.new(0, 400, 0, 24)
+		Subtitle.Position = UDim2.new(0.5, -200, 0.66, 12)
+		Subtitle.BackgroundTransparency = 1
+		Subtitle.TextColor3 = Color3.fromRGB(190, 195, 210)
+		Subtitle.TextTransparency = 1
+		Subtitle.ZIndex = 2
+
+		task.spawn(function()
+			local Start = tick()
+			while Splash and Splash.Parent do
+				local T = tick() - Start
+				local Rotation = math.sin(T * math.pi) * 15
+				Title.Rotation = Rotation
+				Shadow.Rotation = Rotation
+				RunService.Heartbeat:Wait()
+			end
+		end)
+
+		Services.TweenService:Create(Title, TweenInfo.new(2.4, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), { TextTransparency = 0 }):Play()
+		Services.TweenService:Create(Title, TweenInfo.new(2.4, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), { TextStrokeTransparency = 0 }):Play()
+		Services.TweenService:Create(Stroke, TweenInfo.new(2.4, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), { Transparency = 0 }):Play()
+		Services.TweenService:Create(Line, TweenInfo.new(1.6, Enum.EasingStyle.Cubic, Enum.EasingDirection.Out), { Size = UDim2.new(0, 300, 0, 3), BackgroundTransparency = 0 }):Play()
+		Services.TweenService:Create(Subtitle, TweenInfo.new(2.0, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), { TextTransparency = 0 }):Play()
+
+		task.wait(4.4)
+
+		Services.TweenService:Create(Title, TweenInfo.new(1.8, Enum.EasingStyle.Quart, Enum.EasingDirection.In), { TextTransparency = 1, TextStrokeTransparency = 1 }):Play()
+		Services.TweenService:Create(Stroke, TweenInfo.new(1.8, Enum.EasingStyle.Quart, Enum.EasingDirection.In), { Transparency = 1 }):Play()
+		Services.TweenService:Create(Line, TweenInfo.new(1.8, Enum.EasingStyle.Quart, Enum.EasingDirection.In), { BackgroundTransparency = 1 }):Play()
+		Services.TweenService:Create(Subtitle, TweenInfo.new(1.6, Enum.EasingStyle.Quart, Enum.EasingDirection.In), { TextTransparency = 1 }):Play()
+		Services.TweenService:Create(Backdrop, TweenInfo.new(1.8, Enum.EasingStyle.Quart, Enum.EasingDirection.In), { BackgroundTransparency = 1 }):Play()
+
+		task.wait(1.8)
+	end)
+
+	if not Ok then
+		task.wait(0.5)
+	end
+	if Splash and Splash.Parent then Splash:Destroy() end
 end)
 
 task.wait(4.2)
