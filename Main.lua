@@ -1222,7 +1222,7 @@ task.spawn(function()
 	Splash.IgnoreGuiInset = true
 
 	task.spawn(function()
-		task.wait(12)
+		task.wait(6)
 		if Splash and Splash.Parent then Splash:Destroy() end
 	end)
 
@@ -1234,7 +1234,7 @@ task.spawn(function()
 		local Accent = Library.Scheme.AccentColor or Color3.fromRGB(255, 214, 90)
 
 		local Shadow = Instance.new("TextLabel", Backdrop)
-		Shadow.Font = Enum.Font.Bodoni
+		Shadow.Font = Enum.Font.Bodoni or Enum.Font.Gotham
 		Shadow.Text = "TIMI"
 		Shadow.TextScaled = true
 		Shadow.Size = UDim2.new(0, 720, 0, 150)
@@ -1245,19 +1245,19 @@ task.spawn(function()
 		Shadow.ZIndex = 1
 
 		local Title = Instance.new("TextLabel", Backdrop)
-		Title.Font = Enum.Font.Bodoni
+		Title.Font = Enum.Font.Bodoni or Enum.Font.Gotham
 		Title.Text = "TIMI"
 		Title.TextScaled = true
 		Title.Size = UDim2.new(0, 720, 0, 150)
 		Title.Position = UDim2.new(0.5, -360, 0.5, -75)
 		Title.BackgroundTransparency = 1
-		Title.TextTransparency = 1
-		Title.TextStrokeTransparency = 1
+		Title.TextTransparency = 0
+		Title.TextStrokeTransparency = 0
 		Title.ZIndex = 2
 
 		local Stroke = Instance.new("UIStroke", Title)
 		Stroke.Thickness = 2.5
-		Stroke.Transparency = 1
+		Stroke.Transparency = 0
 		Stroke.Color = Accent
 
 		local Line = Instance.new("Frame", Backdrop)
@@ -1278,7 +1278,7 @@ task.spawn(function()
 		Subtitle.Position = UDim2.new(0.5, -200, 0.66, 12)
 		Subtitle.BackgroundTransparency = 1
 		Subtitle.TextColor3 = Color3.fromRGB(190, 195, 210)
-		Subtitle.TextTransparency = 1
+		Subtitle.TextTransparency = 0
 		Subtitle.ZIndex = 2
 
 		task.spawn(function()
@@ -1292,21 +1292,47 @@ task.spawn(function()
 			end
 		end)
 
-		Services.TweenService:Create(Title, TweenInfo.new(2.4, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), { TextTransparency = 0 }):Play()
-		Services.TweenService:Create(Title, TweenInfo.new(2.4, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), { TextStrokeTransparency = 0 }):Play()
-		Services.TweenService:Create(Stroke, TweenInfo.new(2.4, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), { Transparency = 0 }):Play()
-		Services.TweenService:Create(Line, TweenInfo.new(1.6, Enum.EasingStyle.Cubic, Enum.EasingDirection.Out), { Size = UDim2.new(0, 300, 0, 3), BackgroundTransparency = 0 }):Play()
-		Services.TweenService:Create(Subtitle, TweenInfo.new(2.0, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), { TextTransparency = 0 }):Play()
-
-		task.wait(4.4)
-
-		Services.TweenService:Create(Title, TweenInfo.new(1.8, Enum.EasingStyle.Quart, Enum.EasingDirection.In), { TextTransparency = 1, TextStrokeTransparency = 1 }):Play()
-		Services.TweenService:Create(Stroke, TweenInfo.new(1.8, Enum.EasingStyle.Quart, Enum.EasingDirection.In), { Transparency = 1 }):Play()
-		Services.TweenService:Create(Line, TweenInfo.new(1.8, Enum.EasingStyle.Quart, Enum.EasingDirection.In), { BackgroundTransparency = 1 }):Play()
-		Services.TweenService:Create(Subtitle, TweenInfo.new(1.6, Enum.EasingStyle.Quart, Enum.EasingDirection.In), { TextTransparency = 1 }):Play()
-		Services.TweenService:Create(Backdrop, TweenInfo.new(1.8, Enum.EasingStyle.Quart, Enum.EasingDirection.In), { BackgroundTransparency = 1 }):Play()
+		task.spawn(function()
+			local Elapsed = 0
+			local Last = tick()
+			while Elapsed < 1.1 and Splash and Splash.Parent do
+				local Now = tick()
+				Elapsed = Elapsed + (Now - Last)
+				Last = Now
+				local A = math.min(Elapsed / 1.1, 1)
+				local EaseOut = 1 - (1 - A) * (1 - A) * (1 - A)
+				Line.Size = UDim2.new(0, math.floor(300 * EaseOut), 0, 3)
+				Line.BackgroundTransparency = 1 - A
+				RunService.Heartbeat:Wait()
+			end
+			if Splash and Splash.Parent then
+				Line.BackgroundTransparency = 0
+				Line.Size = UDim2.new(0, 300, 0, 3)
+			end
+		end)
 
 		task.wait(1.8)
+
+		task.spawn(function()
+			local Elapsed = 0
+			local Last = tick()
+			while Elapsed < 0.7 and Splash and Splash.Parent do
+				local Now = tick()
+				Elapsed = Elapsed + (Now - Last)
+				Last = Now
+				local A = math.min(Elapsed / 0.7, 1)
+				Title.TextTransparency = A
+				Title.TextStrokeTransparency = A
+				Shadow.TextTransparency = math.min(0.6 + A, 1)
+				Subtitle.TextTransparency = A
+				Line.BackgroundTransparency = A
+				Line.Size = UDim2.new(0, math.floor(300 * (1 - A)), 0, 3)
+				RunService.Heartbeat:Wait()
+			end
+			if Splash and Splash.Parent then Splash:Destroy() end
+		end)
+
+		task.wait(0.7)
 	end)
 
 	if not Ok then
@@ -1315,7 +1341,7 @@ task.spawn(function()
 	if Splash and Splash.Parent then Splash:Destroy() end
 end)
 
-task.wait(4.2)
+task.wait(2.6)
 
 local Window = Library:CreateWindow({
 	Title = "TIMI Hub",
@@ -3247,6 +3273,18 @@ Toggles.MuteChestOpenSound:OnChanged(function(Value)
 	end
 end)
 
+Connections.ChestSoundMute = Services.RunService.Heartbeat:Connect(function()
+	if Toggles.MuteChestOpenSound and Toggles.MuteChestOpenSound.Value then
+		for _, Object in Objects.Chests do
+			for _, Sound in Object:GetDescendants() do
+				if Sound:IsA("Sound") and Sound.Volume ~= 0 then
+					Sound.Volume = 0
+				end
+			end
+		end
+	end
+end)
+
 Toggles.DoorESPToggle:AddColorPicker("DoorESPColor",           { Text = "Doors",        Default = Color3.fromRGB(0, 200, 255),  Transparency = 0 })
 Toggles.HidingSpotESPToggle:AddColorPicker("HidingSpotESPColor", { Text = "Hiding Spots", Default = Color3.fromRGB(255, 170, 0),  Transparency = 0 })
 Toggles.PlayerESPToggle:AddColorPicker("PlayerESPColor",       { Text = "Players",      Default = Color3.fromRGB(255, 255, 255), Transparency = 0 })
@@ -3999,15 +4037,6 @@ if Functions.CheckCompatability({"hookmetamethod", "newcclosure", "getnamecallme
 						Args[1] = 0 Args[2] = (Globals.SpoofOffset == 200 and 65 or -65) Args[3] = 0 Args[4] = false
 					else
 						Args[1] = -650
-					end
-				end
-			end
-
-			if Method == "Play" and Toggles.MuteChestOpenSound and Toggles.MuteChestOpenSound.Value and Self:IsA("Sound") then
-				for _, Chest in pairs(Objects.Chests) do
-					if Chest and Self:IsDescendantOf(Chest) then
-						Self.Volume = 0
-						break
 					end
 				end
 			end
