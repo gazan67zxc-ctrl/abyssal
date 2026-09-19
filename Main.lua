@@ -1377,7 +1377,87 @@ local Tabs = {
 	Stairwell = Window:AddTab("New - Stairwell", "rbxassetid://80017304328364"),
 }
 
+do
+	local GroupboxMethods = getmetatable(Tabs.General).__index
+	local AddToggleOriginal = GroupboxMethods.AddToggle
+
+	GroupboxMethods.AddToggle = function(Groupbox, Idx, Info)
+		local Toggle = AddToggleOriginal(Groupbox, Idx, Info)
+		if Toggle and Toggle.Holder and Toggle.TextLabel and Toggle.Value ~= nil then
+			local Button = Toggle.Holder
+			local Switch, Ball = nil, nil
+			for _, Child in Button:GetChildren() do
+				if Child:IsA("Frame") then
+					Switch = Child
+					break
+				end
+			end
+			if Switch then
+				for _, Child in Switch:GetChildren() do
+					if Child:IsA("Frame") then
+						Ball = Child
+						break
+					end
+				end
+			end
+			if Switch and Ball then
+				local Notch = Instance.new("Frame", Ball)
+				Notch.AnchorPoint = Vector2.new(0.5, 0.5)
+				Notch.Position = UDim2.fromScale(0.5, 0.5)
+				Notch.Size = UDim2.fromOffset(3, 11)
+				Notch.BackgroundColor3 = Color3.fromRGB(30, 32, 38)
+				Notch.BorderSizePixel = 0
+				Instance.new("UICorner", Notch).CornerRadius = UDim.new(1, 0)
+
+				local Animating = false
+				local AnimationElapsed = 0
+				local AnimationFrom = 0
+				local RotationFrom = -45
+				local AnimationHeartbeat
+
+				local function Finish()
+					local Offset = Toggle.Value and 1 or 0
+					Ball.AnchorPoint = Vector2.new(Offset, 0)
+					Ball.Position = UDim2.fromScale(Offset, 0)
+					Notch.Rotation = Toggle.Value and 45 or -45
+					Animating = false
+				end
+
+				AnimationHeartbeat = Services.RunService.Heartbeat:Connect(function(Dt)
+					if not Animating then
+						return
+					end
+					AnimationElapsed = AnimationElapsed + (Dt or 0.016)
+					local T = math.min(AnimationElapsed / 0.15, 1)
+					local Eased = T < 0.5 and (2 * T * T) or (1 - ((-2 * T + 2) * (-2 * T + 2) / 2))
+					local Offset = AnimationFrom + ((Toggle.Value and 1 or 0) - AnimationFrom) * Eased
+					local RotationTarget = Toggle.Value and 45 or -45
+					Ball.AnchorPoint = Vector2.new(Offset, 0)
+					Ball.Position = UDim2.fromScale(Offset, 0)
+					Notch.Rotation = RotationFrom + (RotationTarget - RotationFrom) * Eased
+					if T >= 1 then
+						Finish()
+					end
+				end)
+
+				local SetValueOriginal = Toggle.SetValue
+				Toggle.SetValue = function(_, Value)
+					AnimationFrom = Ball.AnchorPoint.X
+					RotationFrom = Notch.Rotation
+					AnimationElapsed = 0
+					Animating = true
+					SetValueOriginal(Toggle, Value)
+				end
+
+				Finish()
+			end
+		end
+		return Toggle
+	end
+end
+
 Groupboxes.General_Character = Tabs.General:AddLeftGroupbox("Character")
+
 Groupboxes.General_Character:AddSlider("SpeedBoostSlider", {
 	Text = "Speed Boost", Min = 0, Max = 100, Default = 0, Rounding = 0, Compact = true
 })
