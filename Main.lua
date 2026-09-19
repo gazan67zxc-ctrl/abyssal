@@ -3241,7 +3241,6 @@ Toggles.MuteChestOpenSound:OnChanged(function(Value)
 			for _, Sound in Object:GetDescendants() do
 				if Sound:IsA("Sound") then
 					Sound.Volume = 0
-					Sound.Playing = false
 				end
 			end
 		end
@@ -4005,19 +4004,11 @@ if Functions.CheckCompatability({"hookmetamethod", "newcclosure", "getnamecallme
 			end
 
 			if Method == "Play" and Toggles.MuteChestOpenSound and Toggles.MuteChestOpenSound.Value and Self:IsA("Sound") then
-				local SoundName = string.lower(Self.Name)
-				local ShouldMute = SoundName:find("open") or SoundName:find("drawer") or SoundName:find("rattle") or SoundName:find("chest") or SoundName:find("search")
-				if not ShouldMute then
-					for _, Chest in pairs(Objects.Chests) do
-						if Chest and Self:IsDescendantOf(Chest) then
-							ShouldMute = true
-							break
-						end
+				for _, Chest in pairs(Objects.Chests) do
+					if Chest and Self:IsDescendantOf(Chest) then
+						Self.Volume = 0
+						break
 					end
-				end
-				if ShouldMute then
-					Self.Volume = 0
-					return
 				end
 			end
 		end
