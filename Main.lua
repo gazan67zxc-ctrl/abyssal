@@ -3263,7 +3263,7 @@ Groupboxes.Visuals_ESP_Toggles:AddToggle("MuteChestOpenSound", { Text = "Mute Ch
 
 Toggles.MuteChestOpenSound:OnChanged(function(Value)
 	for _, Object in Objects.Chests do
-		if Value then
+		if Value and Object and Object.Parent then
 			for _, Sound in Object:GetDescendants() do
 				if Sound:IsA("Sound") then
 					Sound.Volume = 0
@@ -3276,9 +3276,11 @@ end)
 Connections.ChestSoundMute = Services.RunService.Heartbeat:Connect(function()
 	if Toggles.MuteChestOpenSound and Toggles.MuteChestOpenSound.Value then
 		for _, Object in Objects.Chests do
-			for _, Sound in Object:GetDescendants() do
-				if Sound:IsA("Sound") and Sound.Volume ~= 0 then
-					Sound.Volume = 0
+			if Object and Object.Parent then
+				for _, Sound in Object:GetDescendants() do
+					if Sound:IsA("Sound") and Sound.Volume ~= 0 then
+						Sound.Volume = 0
+					end
 				end
 			end
 		end
