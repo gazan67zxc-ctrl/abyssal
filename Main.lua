@@ -1218,7 +1218,7 @@ task.spawn(function()
 	local Splash = Instance.new("ScreenGui")
 	Splash.Name = Abysall.ESPLibrary:GenerateRandomString()
 	Splash.Parent = GetHiddenContainer()
-	Splash.DisplayOrder = 100
+	Splash.DisplayOrder = 32767
 	Splash.IgnoreGuiInset = true
 
 	local Backdrop = Instance.new("Frame", Splash)
@@ -1307,7 +1307,7 @@ end)
 task.wait(4.2)
 
 local Window = Library:CreateWindow({
-	Title = "Abysall Hub Continued",
+	Title = "TIMI Hub",
 	Footer = "dsc.gg/abysallhubcontinued",
 	NotifySide = "Right",
 	ShowCustomCursor = false,
